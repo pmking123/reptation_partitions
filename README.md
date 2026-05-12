@@ -17,6 +17,8 @@ No third-party packages are required.
 - `scripts/reptation_partition_simulations.py`
 - `scripts/reptation_be_saddle.py`
 - `scripts/reptation_rld.py`
+ - `scripts/reptation_crossover.py`
+ - `scripts/reptation_rr_entropy.py`
 
 ## Script Overview
 
@@ -104,6 +106,30 @@ Run:
 python scripts/reptation_rld.py
 ```
 
+### 6) `reptation_crossover.py`
+Analysis and plotting utilities for crossover behavior between different scaling regimes
+
+- Produces summary statistics and figures comparing scaled observables across models
+- Used to generate crossover summary CSV and plotting inputs in `figures/`
+
+Run:
+
+```bash
+python scripts/reptation_crossover.py
+```
+
+### 7) `reptation_rr_entropy.py`
+Scripts to compute and compare relative/renormalized RR entropy measures
+
+- Computes RR-entropy coefficients and convergence diagnostics
+- Outputs CSV summaries used by plotting scripts in `figures/`
+
+Run:
+
+```bash
+python scripts/reptation_rr_entropy.py
+```
+
 ## Typical Usage
 
 From repo root:
@@ -114,6 +140,8 @@ python scripts/reptation_mc.py
 python scripts/reptation_mc_uniform.py
 python scripts/reptation_be_saddle.py
 python scripts/reptation_rld.py
+python scripts/reptation_crossover.py
+python scripts/reptation_rr_entropy.py
 ```
 
 If your environment uses `python3` instead of `python`, replace accordingly.
@@ -123,6 +151,9 @@ If your environment uses `python3` instead of `python`, replace accordingly.
 - `reptation_mc_uniform.py` imports utilities from `reptation_mc.py`
 - `reptation_rld.py` imports from both `reptation_mc.py` and `reptation_mc_uniform.py`
 - Keep all five scripts together in the same `scripts/` directory
+ - Additional analysis scripts like `reptation_crossover.py` and `reptation_rr_entropy.py`
+   produce CSV outputs consumed by `figures/` and reference the core simulation utilities
+ - Keep all scripts together in the same `scripts/` directory
 
 ## Reproducibility
 
@@ -133,10 +164,10 @@ For alternative experiments, edit the `__main__` blocks or function call argumen
 
 MIT License
 
-Copyright (c) [2026] [Paul M. King]
+Copyright (c) 2026 Paul M. King
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.   
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
