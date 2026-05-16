@@ -42,6 +42,7 @@ import time
 from collections import Counter
 import sys
 import os
+from xml.etree.ElementTree import PI
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from reptation_mc import (
@@ -254,14 +255,17 @@ def mode_convergence_study(L_vals, n_per_L=None, seed=42):
     This is the central test: modal_k / sqrt(L) -> pi/sqrt(6)?
     """
     PI     = math.pi
-    pred_k = PI / math.sqrt(6)
+    c_erdos = math.sqrt(6) / PI   # Erdos-Lehner coefficient
 
     print("Mode convergence study")
-    print(f"  HR prediction: modal k / sqrt(L) -> {pred_k:.4f}")
+    print(f"  Erdos-Lehner prediction: modal k / (sqrt(L)*log(L)) -> c")
+    print(f"  where c = sqrt(6)/pi * c_mode ~ {c_erdos:.4f} * c_mode")
+    print(f"  Grand canonical (wrong for mode): pi/sqrt(6)*sqrt(L) = "
+          f"{PI/math.sqrt(6):.4f}*sqrt(L)")
     print()
 
     hdr = (f"{'L':>7}  {'modal_k':>8}  {'modal/sqL':>10}  "
-           f"{'err%':>7}  {'<k>/sqL':>9}  {'sig/L^.25':>10}  "
+           f"{'k*/sqL logL':>12}  {'<k>/sqL':>9}  {'sig/L^.25':>10}  "
            f"{'tau':>7}  {'t(s)':>5}")
     print(hdr)
     print("-" * len(hdr))
@@ -295,10 +299,10 @@ def mode_convergence_study(L_vals, n_per_L=None, seed=42):
         acf_   = autocorrelation(k_list)
         ti     = tau_int(acf_)
         mk     = k_cnt.most_common(1)[0][0]
-        me     = (mk / sqL - pred_k) / pred_k * 100
+        ratio_logL = mk / (sqL * math.log(L)) if L > 1 else 0
 
         print(f"{L:>7}  {mk:>8}  {mk/sqL:>10.4f}  "
-              f"{me:>+7.2f}%  {km/sqL:>9.4f}  {ksig/L14:>10.4f}  "
+              f"{ratio_logL:>10.5f}  {km/sqL:>9.4f}  {ksig/L14:>10.4f}  "
               f"{ti:>7.1f}  {t1-t0:>5.1f}")
 
         results.append({

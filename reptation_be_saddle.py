@@ -22,15 +22,15 @@ CORRECTION 3: The k* scaling
   Status:  (pi/sqrt(6)) * sqrt(L) is the GRAND CANONICAL mean of k
            (E[k] under the Boltzmann-weighted ensemble at fugacity alpha).
            Under the CANONICAL (uniform) measure:
-             E[k]_canonical ~ (sqrt(6)/pi) * sqrt(L) * log(sqrt(L))
-             k*_canonical   ~ 0.95 * (sqrt(6)/pi) * sqrt(L) * log(sqrt(L))
-           Both grow as sqrt(L)*log(sqrt(L)), NOT sqrt(L).
+           E[k]_canonical ~ (sqrt(6)/pi) * sqrt(L) * log(L)
+           k*_canonical   ~ 0.95 * (sqrt(6)/pi) * sqrt(L) * log(L)
+           Both grow as sqrt(L)*log(L), NOT sqrt(L).
 
 Key physical implication:
   The grand canonical prediction k ~ (pi/sqrt(6))*sqrt(L) is correct for
   the TYPICAL PART VALUE (the fugacity that makes E[k] self-consistent),
   but it is not the most probable number of parts in a uniformly drawn
-  partition. The correct scaling is sqrt(L)*log(sqrt(L)).
+  partition. The correct scaling is sqrt(L)*log(L).
 
 Requires: no external dependencies beyond standard library.
 
@@ -145,10 +145,10 @@ def run_analysis(L_max=2000):
     print()
     print("Canonical predictions (uniform measure, from exact p_k(L)):")
     c = math.sqrt(6) / PI
-    print(f"  E[k]_canon ~ (sqrt(6)/pi) * sqrt(L) * log(sqrt(L))")
-    print(f"             = {c:.4f} * sqrt(L) * log(sqrt(L))")
-    print(f"  k*_canon   ~ 0.95 * (sqrt(6)/pi) * sqrt(L) * log(sqrt(L))")
-    print(f"             ~ {0.95*c:.4f} * sqrt(L) * log(sqrt(L))")
+    print(f"  E[k]_canon ~ (sqrt(6)/pi) * sqrt(L) * log(L)")
+    print(f"             = {c:.4f} * sqrt(L) * log(L)")
+    print(f"  k*_canon   ~ 0.95 * (sqrt(6)/pi) * sqrt(L) * log(L)")
+    print(f"             ~ {0.95*c:.4f} * sqrt(L) * log(L)")
     print()
 
     # --- Compute p_k(L) ---
@@ -178,7 +178,7 @@ def run_analysis(L_max=2000):
         sqL = math.sqrt(L)
         alpha = alpha_from_L(L)
         Ek_g  = Ek_gc(alpha)
-        be_form = c * sqL * math.log(sqL)
+        be_form = c * sqL * math.log(L)
 
         print(f"  {L:>6}  {stats['k_star']:>8}  "
               f"{stats['k_star']/sqL:>8.4f}  "
@@ -196,7 +196,7 @@ def run_analysis(L_max=2000):
     print("=" * 65)
     print("k* scaling convergence:")
     print()
-    print(f"  Predicted: k* ~ {0.95*c:.4f} * sqrt(L) * log(sqrt(L))")
+    print(f"  Predicted: k* ~ {0.95*c:.4f} * sqrt(L) * log(L)")
     print()
     print(f"  {'L':>6}  {'k*':>6}  {'k*/form':>9}  {'sigma':>8}  "
           f"{'sigma/L^.25':>12}  {'mode_freq':>10}")
@@ -206,7 +206,7 @@ def run_analysis(L_max=2000):
         L = r['L']
         sqL = math.sqrt(L)
         L14 = L**0.25
-        form = 0.95 * c * sqL * math.log(sqL)
+        form = 0.95 * c * sqL * math.log(L)
         if form < 1:
             continue
         print(f"  {L:>6}  {r['k_star']:>6}  "
@@ -214,6 +214,12 @@ def run_analysis(L_max=2000):
               f"{r['sigma']:>8.4f}  "
               f"{r['sigma']/L14:>12.4f}  "
               f"{r['freq_at_mode']:>10.5f}")
+
+    print()
+    print("=" * 65)
+    print("Scaling fit: which formula fits k* better?")
+    print("=" * 65)
+    fit_kstar_scaling(results)
 
     # --- Entropy comparison ---
     print()
@@ -253,9 +259,9 @@ def run_analysis(L_max=2000):
     print("   It governs the TYPICAL PART SIZE distribution (BE).")
     print()
     print("2. Under the canonical (uniform) ensemble:")
-    print(f"   E[k] ~ {c:.4f} * sqrt(L) * log(sqrt(L))")
-    print(f"   k*   ~ {0.95*c:.4f} * sqrt(L) * log(sqrt(L))")
-    print("   Both grow as sqrt(L)*log(sqrt(L)), NOT sqrt(L).")
+    print(f"   E[k] ~ {c:.4f} * sqrt(L) * log(L)")
+    print(f"   k*   ~ {0.95*c:.4f} * sqrt(L) * log(L)")
+    print("   Both grow as sqrt(L)*log(L), NOT sqrt(L).")
     print()
     print("3. The run-length distribution is BE, not geometric.")
     print("   f(j) = (1/E[k]) / (exp(j*pi/sqrt(6L)) - 1)")
@@ -273,6 +279,61 @@ def run_analysis(L_max=2000):
 
     return results, dp
 
+def fit_kstar_scaling(results):
+    """
+    Fit k* against both sqrt(L)*log(sqrt(L)) and sqrt(L)*log(L)
+    to determine which formula fits the DP data better and what
+    the correct coefficient is.  Uses only L >= 100 to be in the
+    asymptotic regime.
+    """
+    import math
+
+    large = [(r['L'], r['k_star']) for r in results if r['L'] >= 100]
+    if not large:
+        print("Not enough large-L data for fitting.")
+        return
+
+    L_vals = [x[0] for x in large]
+    k_vals = [x[1] for x in large]
+
+    # Fit 1: k* = a * sqrt(L) * log(sqrt(L))
+    # a = sum(k * sqrt(L)*log(sqrt(L))) / sum((sqrt(L)*log(sqrt(L)))^2)
+    def basis1(L):
+        return math.sqrt(L) * math.log(math.sqrt(L))
+
+    def basis2(L):
+        return math.sqrt(L) * math.log(L)
+
+    for label, basis in [("sqrt(L)*log(sqrt(L))", basis1),
+                          ("sqrt(L)*log(L)",       basis2)]:
+        b = [basis(L) for L in L_vals]
+        # OLS: a = dot(k, b) / dot(b, b)
+        num = sum(k * bi for k, bi in zip(k_vals, b))
+        den = sum(bi**2 for bi in b)
+        a   = num / den
+        # Residuals
+        res = [k - a * bi for k, bi in zip(k_vals, b)]
+        rms = math.sqrt(sum(r**2 for r in res) / len(res))
+        # Max relative error
+        rel = [abs(r) / k for r, k in zip(res, k_vals)]
+        max_rel = max(rel) * 100
+
+        print(f"\n  Fit: k* = {a:.6f} * {label}")
+        print(f"    RMS residual:      {rms:.4f}")
+        print(f"    Max relative err:  {max_rel:.2f}%")
+        print(f"    Implied c (= a / (sqrt(6)/pi)): "
+              f"{a / (math.sqrt(6)/math.pi):.6f}")
+
+    # Convergence of ratio to check which limit is approached
+    print()
+    print("  Ratio k* / (sqrt(L)*log(L)) for large L "
+          "(should converge if log(L) is correct):")
+    c_ref = math.sqrt(6) / math.pi
+    for L, k in zip(L_vals, k_vals):
+        r1 = k / (math.sqrt(L) * math.log(math.sqrt(L)))
+        r2 = k / (math.sqrt(L) * math.log(L))
+        print(f"    L={L:5d}: k*/{basis1.__name__ if hasattr(basis1,'__name__') else 'log(sqrtL)'}={r1:.5f}, "
+              f"k*/log(L)={r2:.5f}  (c_ref={c_ref:.5f})")
 
 # ============================================================
 # Entry point
