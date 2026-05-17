@@ -18,6 +18,7 @@ No third-party packages are required.
 - `reptation_rld.py`
 - `reptation_crossover.py`
 - `reptation_rr_entropy.py`
+- `reptation_fixed_point_verification.py`
 
 ## Script Overview
 
@@ -76,12 +77,12 @@ Notes:
 - Early verification sections complete much faster
 
 ### 4) `reptation_be_saddle.py`
-Saddle-point analysis comparing grand-canonical vs canonical behaviour
+Saddle-point analysis comparing grand-canonical vs canonical behavior
 
 - Computes exact `p_k(L)` table via dynamic programming
 - Compares:
   - grand-canonical prediction (`~ sqrt(L)` scale)
-  - canonical statistics from exact counts (including `sqrt(L) log(sqrt(L))` behaviour)
+  - canonical statistics from exact counts (including `sqrt(L) log(sqrt(L))` behavior)
 - Reports entropy comparisons and asymptotic diagnostics
 
 Run:
@@ -106,7 +107,7 @@ python scripts/reptation_rld.py
 ```
 
 ### 6) `reptation_crossover.py`
-Analysis and plotting utilities for crossover behaviour between different scaling regimes
+Analysis and plotting utilities for crossover behavior between different scaling regimes
 
 - Produces summary statistics and figures comparing scaled observables across models
 - Used to generate crossover summary CSV and plotting inputs in `figures/`
@@ -129,6 +130,21 @@ Run:
 python scripts/reptation_rr_entropy.py
 ```
 
+### 8) `reptation_fixed_point_verification.py`
+Numerical verification of the fixed-point set characterisation for the coarse-graining operators R₁ and R₂ (Proposition 7)
+
+- Verifies that every composition of L ≤ 20 converges to a **gap-2 composition** under iterated application of R₂∘R₁ and R₁∘R₂, for both deterministic (left-to-right) and random merge orderings
+- Confirms that every gap-2 composition is itself a fixed point of both R₁ and R₂
+- Demonstrates attractor non-uniqueness: different merge orderings may produce different gap-2 attractors from the same input, but all attractors are valid gap-2 compositions
+- Examines all 1,048,575 compositions of L = 1, …, 20
+- Prints worked examples and a four-test verification report
+
+Run:
+
+```bash
+python scripts/reptation_fixed_point_verification.py
+```
+
 ## Typical Usage
 
 From repo root:
@@ -141,6 +157,7 @@ python scripts/reptation_be_saddle.py
 python scripts/reptation_rld.py
 python scripts/reptation_crossover.py
 python scripts/reptation_rr_entropy.py
+python scripts/reptation_fixed_point_verification.py
 ```
 
 If your environment uses `python3` instead of `python`, replace accordingly.
@@ -150,7 +167,8 @@ If your environment uses `python3` instead of `python`, replace accordingly.
 - `reptation_mc_uniform.py` imports utilities from `reptation_mc.py`
 - `reptation_rld.py` imports from both `reptation_mc.py` and `reptation_mc_uniform.py`
 - `reptation_crossover.py` and `reptation_rr_entropy.py` produce CSV outputs consumed by `figures/`
-- Keep all seven scripts together in the same `scripts/` directory
+- `reptation_fixed_point_verification.py` is standalone (no imports from other scripts)
+- Keep all eight scripts together in the same `scripts/` directory
 
 ## Reproducibility
 
