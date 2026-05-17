@@ -76,12 +76,12 @@ Notes:
 - Early verification sections complete much faster
 
 ### 4) `reptation_be_saddle.py`
-Saddle-point analysis comparing grand-canonical vs canonical behavior
+Saddle-point analysis comparing grand-canonical vs canonical behaviour
 
 - Computes exact `p_k(L)` table via dynamic programming
 - Compares:
   - grand-canonical prediction (`~ sqrt(L)` scale)
-  - canonical statistics from exact counts (including `sqrt(L) log(sqrt(L))` behavior)
+  - canonical statistics from exact counts (including `sqrt(L) log(sqrt(L))` behaviour)
 - Reports entropy comparisons and asymptotic diagnostics
 
 Run:
@@ -106,7 +106,7 @@ python scripts/reptation_rld.py
 ```
 
 ### 6) `reptation_crossover.py`
-Analysis and plotting utilities for crossover behavior between different scaling regimes
+Analysis and plotting utilities for crossover behaviour between different scaling regimes
 
 - Produces summary statistics and figures comparing scaled observables across models
 - Used to generate crossover summary CSV and plotting inputs in `figures/`
