@@ -1,24 +1,23 @@
 # Reptation Partition Scripts
 
-This repository contains five standalone Python scripts used to analyze the connection between reptating polymer run-length encodings and integer partition ensembles.
+This repository contains standalone Python scripts used to analyze the connection between reptating polymer run-length encodings and integer partition ensembles.
 
 ## Requirements
 
 - Python 3.8+
 - Standard library only (`math`, `random`, `collections`, `itertools`, `functools`, `time`, etc.)
-- Optional: `reptation_core.py` in the same directory (used for exact partition enumeration in some validation paths)
 
 No third-party packages are required.
 
 ## Repository Layout
 
-- `scripts/reptation_mc.py`
-- `scripts/reptation_mc_uniform.py`
-- `scripts/reptation_partition_simulations.py`
-- `scripts/reptation_be_saddle.py`
-- `scripts/reptation_rld.py`
- - `scripts/reptation_crossover.py`
- - `scripts/reptation_rr_entropy.py`
+- `reptation_mc.py`
+- `reptation_mc_uniform.py`
+- `reptation_partition_simulations.py`
+- `reptation_be_saddle.py`
+- `reptation_rld.py`
+- `reptation_crossover.py`
+- `reptation_rr_entropy.py`
 
 ## Script Overview
 
@@ -150,10 +149,8 @@ If your environment uses `python3` instead of `python`, replace accordingly.
 
 - `reptation_mc_uniform.py` imports utilities from `reptation_mc.py`
 - `reptation_rld.py` imports from both `reptation_mc.py` and `reptation_mc_uniform.py`
-- Keep all five scripts together in the same `scripts/` directory
- - Additional analysis scripts like `reptation_crossover.py` and `reptation_rr_entropy.py`
-   produce CSV outputs consumed by `figures/` and reference the core simulation utilities
- - Keep all scripts together in the same `scripts/` directory
+- `reptation_crossover.py` and `reptation_rr_entropy.py` produce CSV outputs consumed by `figures/`
+- Keep all seven scripts together in the same `scripts/` directory
 
 ## Reproducibility
 
