@@ -11,6 +11,7 @@ No third-party packages are required.
 
 ## Repository Layout
 
+- `reptation_core.py`
 - `reptation_mc.py`
 - `reptation_mc_uniform.py`
 - `reptation_partition_simulations.py`
@@ -22,7 +23,16 @@ No third-party packages are required.
 
 ## Script Overview
 
+### 0) `reptation_core.py`
+Shared combinatorial utilities imported by other scripts
+
+- `partitions(L)`: generator yielding all partitions of `L` as tuples in non-increasing order, using a standard recursive algorithm
+- Used as an optional dependency by `reptation_mc.py` and `reptation_mc_uniform.py` for exact validation
+
+This script is a utility module; it is not intended to be run directly.
+
 ### 1) `reptation_mc.py`
+
 Metropolis-Hastings sampler over partitions of fixed `L` under weighted measure
 
 - Weight: `w_tilde(lambda) = (k! / prod_j m_j!) * 2^k`
@@ -39,6 +49,7 @@ python reptation_mc.py
 ```
 
 ### 2) `reptation_mc_uniform.py`
+
 Fast Metropolis-Hastings sampler under the **uniform** measure over partitions of `L`
 
 - Target: each partition has equal probability
@@ -56,6 +67,7 @@ python reptation_mc_uniform.py
 ```
 
 ### 3) `reptation_partition_simulations.py`
+
 Exact enumeration and verification suite for core combinatorial claims
 
 Main sections:
@@ -77,6 +89,7 @@ Notes:
 - Early verification sections complete much faster
 
 ### 4) `reptation_be_saddle.py`
+
 Saddle-point analysis comparing grand-canonical vs canonical behavior
 
 - Computes exact `p_k(L)` table via dynamic programming
@@ -92,6 +105,7 @@ python reptation_be_saddle.py
 ```
 
 ### 5) `reptation_rld.py`
+
 Run-length distribution analysis for uniform partition ensemble
 
 - Compares MC marginals to:
@@ -107,6 +121,7 @@ python reptation_rld.py
 ```
 
 ### 6) `reptation_crossover.py`
+
 Analysis and plotting utilities for crossover behavior between different scaling regimes
 
 - Produces summary statistics and figures comparing scaled observables across models
@@ -119,6 +134,7 @@ python reptation_crossover.py
 ```
 
 ### 7) `reptation_rr_entropy.py`
+
 Scripts to compute and compare relative/renormalized RR entropy measures
 
 - Computes RR-entropy coefficients and convergence diagnostics
@@ -131,6 +147,7 @@ python reptation_rr_entropy.py
 ```
 
 ### 8) `reptation_fixed_point_verification.py`
+
 Numerical verification of the fixed-point set characterisation for the coarse-graining operators R₁ and R₂ (Proposition 7)
 
 - Verifies that every composition of L ≤ 20 converges to a **gap-2 composition** under iterated application of R₂∘R₁ and R₁∘R₂, for both deterministic (left-to-right) and random merge orderings
@@ -164,10 +181,12 @@ If your environment uses `python3` instead of `python`, replace accordingly.
 
 ## Notes on Inter-Script Dependencies
 
+- `reptation_mc.py` and `reptation_mc_uniform.py` optionally import `partitions()` from `reptation_core.py` for exact validation (gracefully skipped if not found)
 - `reptation_mc_uniform.py` imports utilities from `reptation_mc.py`
 - `reptation_rld.py` imports from both `reptation_mc.py` and `reptation_mc_uniform.py`
 - `reptation_crossover.py` and `reptation_rr_entropy.py` produce CSV outputs consumed by `figures/`
 - `reptation_fixed_point_verification.py` is standalone (no imports from other scripts)
+- Keep all eight scripts together in the same directory
 
 ## Reproducibility
 
