@@ -35,7 +35,7 @@ Metropolis-Hastings sampler over partitions of fixed `L` under weighted measure
 Run:
 
 ```bash
-python scripts/reptation_mc.py
+python reptation_mc.py
 ```
 
 ### 2) `reptation_mc_uniform.py`
@@ -52,7 +52,7 @@ Fast Metropolis-Hastings sampler under the **uniform** measure over partitions o
 Run:
 
 ```bash
-python scripts/reptation_mc_uniform.py
+python reptation_mc_uniform.py
 ```
 
 ### 3) `reptation_partition_simulations.py`
@@ -68,7 +68,7 @@ Main sections:
 Run:
 
 ```bash
-python scripts/reptation_partition_simulations.py
+python reptation_partition_simulations.py
 ```
 
 Notes:
@@ -88,7 +88,7 @@ Saddle-point analysis comparing grand-canonical vs canonical behavior
 Run:
 
 ```bash
-python scripts/reptation_be_saddle.py
+python reptation_be_saddle.py
 ```
 
 ### 5) `reptation_rld.py`
@@ -103,7 +103,7 @@ Run-length distribution analysis for uniform partition ensemble
 Run:
 
 ```bash
-python scripts/reptation_rld.py
+python reptation_rld.py
 ```
 
 ### 6) `reptation_crossover.py`
@@ -115,7 +115,7 @@ Analysis and plotting utilities for crossover behavior between different scaling
 Run:
 
 ```bash
-python scripts/reptation_crossover.py
+python reptation_crossover.py
 ```
 
 ### 7) `reptation_rr_entropy.py`
@@ -127,7 +127,7 @@ Scripts to compute and compare relative/renormalized RR entropy measures
 Run:
 
 ```bash
-python scripts/reptation_rr_entropy.py
+python reptation_rr_entropy.py
 ```
 
 ### 8) `reptation_fixed_point_verification.py`
@@ -142,7 +142,7 @@ Numerical verification of the fixed-point set characterisation for the coarse-gr
 Run:
 
 ```bash
-python scripts/reptation_fixed_point_verification.py
+python reptation_fixed_point_verification.py
 ```
 
 ## Typical Usage
@@ -150,14 +150,14 @@ python scripts/reptation_fixed_point_verification.py
 From repo root:
 
 ```bash
-python scripts/reptation_partition_simulations.py
-python scripts/reptation_mc.py
-python scripts/reptation_mc_uniform.py
-python scripts/reptation_be_saddle.py
-python scripts/reptation_rld.py
-python scripts/reptation_crossover.py
-python scripts/reptation_rr_entropy.py
-python scripts/reptation_fixed_point_verification.py
+python reptation_partition_simulations.py
+python reptation_mc.py
+python reptation_mc_uniform.py
+python reptation_be_saddle.py
+python reptation_rld.py
+python reptation_crossover.py
+python reptation_rr_entropy.py
+python reptation_fixed_point_verification.py
 ```
 
 If your environment uses `python3` instead of `python`, replace accordingly.
@@ -168,7 +168,6 @@ If your environment uses `python3` instead of `python`, replace accordingly.
 - `reptation_rld.py` imports from both `reptation_mc.py` and `reptation_mc_uniform.py`
 - `reptation_crossover.py` and `reptation_rr_entropy.py` produce CSV outputs consumed by `figures/`
 - `reptation_fixed_point_verification.py` is standalone (no imports from other scripts)
-- Keep all eight scripts together in the same `scripts/` directory
 
 ## Reproducibility
 
