@@ -6,7 +6,7 @@ and the M5 distinct-part growth rate.
 
 Two asymptotic results are verified:
 
-RESULT 1: Rogers-Ramanujan (M6, gap-2 partitions)
+RESULT 1: Rogers-Ramanujan (M5, gap-2 partitions)
   The number of partitions of L whose parts differ by >= 2 (gap-2
   partitions) satisfies:
       log q_RR(L) ~ alpha_RR * sqrt(L),   alpha_RR = 2*pi/sqrt(15)
@@ -18,7 +18,7 @@ RESULT 1: Rogers-Ramanujan (M6, gap-2 partitions)
   to a 37% reduction in conformational entropy relative to the
   unrestricted (M0) case.
 
-RESULT 2: M5 distinct-part partitions
+RESULT 2: M4 distinct-part partitions
   The number of partitions of L into distinct parts satisfies:
       log d(L) ~ alpha_5 * sqrt(L),   alpha_5 = pi/sqrt(12) = alpha_0/sqrt(2)
   This is the Euler identity result for strict partitions.  The growth
@@ -48,10 +48,10 @@ PI   = math.pi
 # Asymptotic coefficients
 ALPHA_0  = PI * math.sqrt(2.0 / 3.0)          # ~ 2.5651  unrestricted
 ALPHA_RR = 2.0 * PI / math.sqrt(15.0)          # ~ 1.6223  gap-2 (RR)
-ALPHA_5  = PI / math.sqrt(3.0)           # ~ 1.8138  distinct parts = alpha_0/sqrt(2)
+ALPHA_D  = PI / math.sqrt(3.0)           # ~ 1.8138  distinct parts = alpha_0/sqrt(2)
 # Ratios
 RATIO_RR = ALPHA_RR / ALPHA_0                  # = sqrt(2/5) ~ 0.6325
-RATIO_5  = ALPHA_5  / ALPHA_0                  # = 1/sqrt(2) ~ 0.7071
+RATIO_5  = ALPHA_D  / ALPHA_0                  # = 1/sqrt(2) ~ 0.7071
 
 
 # ============================================================
@@ -197,8 +197,8 @@ def main():
     print("=" * 65)
     print()
     print(f"  alpha_0  = pi*sqrt(2/3)   = {ALPHA_0:.6f}  (unrestricted, M0-M3)")
-    print(f"  alpha_RR = 2*pi/sqrt(15)  = {ALPHA_RR:.6f}  (gap-2, M6)")
-    print(f"  alpha_5  = pi/sqrt(3)     = {ALPHA_5:.6f}  (distinct parts, M5 = alpha_0/sqrt(2))")
+    print(f"  alpha_RR = 2*pi/sqrt(15)  = {ALPHA_RR:.6f}  (gap-2, M5)")
+    print(f"  alpha_5  = pi/sqrt(3)     = {ALPHA_D:.6f}  (distinct parts, M4 = alpha_0/sqrt(2))")
     print()
     print(f"  alpha_RR / alpha_0 = sqrt(2/5) = {RATIO_RR:.6f}"
           f"  ({100*(1-RATIO_RR):.1f}% reduction)")
@@ -236,7 +236,7 @@ def main():
 
     # --- Convergence tables ---
     rows_rr = convergence_table(q, L_vals, "q_RR", ALPHA_RR, ALPHA_0)
-    rows_d  = convergence_table(d, L_vals, "d",    ALPHA_5,  ALPHA_0)  # ALPHA_5=pi/sqrt(3)
+    rows_d  = convergence_table(d, L_vals, "d",    ALPHA_D,  ALPHA_0)  # ALPHA_D=pi/sqrt(3)
 
     # Also show unrestricted p(L) as reference
     rows_p  = convergence_table(p, L_vals, "p",    ALPHA_0,  ALPHA_0)
@@ -263,7 +263,7 @@ def main():
               f"{ad:>9.6f}  {arr/ap:>8.6f}  {ad/ap:>8.6f}")
     print()
     print(f"  Theoretical limits:   {ALPHA_0:.6f}   "
-          f"{ALPHA_RR:.6f}   {ALPHA_5:.6f}   "
+          f"{ALPHA_RR:.6f}   {ALPHA_D:.6f}   "
           f"{RATIO_RR:.6f}   {RATIO_5:.6f}")
 
     # --- CSV output ---
@@ -299,7 +299,7 @@ def main():
                 "L":             r["L"],
                 "log_d":         f"{r['log_count']:.6f}",
                 "alpha_eff":     f"{r['ratio']:.6f}",
-                "alpha_5_theory": f"{ALPHA_5:.6f}",
+                "alpha_5_theory": f"{ALPHA_D:.6f}",
                 "pct_error":     f"{r['pct_error']:.4f}",
                 "ratio_over_alpha0": f"{r['ratio_over_alpha0']:.6f}",
             })
@@ -348,7 +348,7 @@ def main():
         print(f"    alpha_RR (gap-2)         = {arr:.5f}  "
               f"(theory {ALPHA_RR:.5f}, err {100*(arr-ALPHA_RR)/ALPHA_RR:+.2f}%)")
         print(f"    alpha_d  (distinct)      = {ad:.5f}  "
-              f"(theory {ALPHA_5:.5f}, err {100*(ad-ALPHA_5)/ALPHA_5:+.2f}%)")
+              f"(theory {ALPHA_D:.5f}, err {100*(ad-ALPHA_D)/ALPHA_D:+.2f}%)")
         print()
         print(f"    Observed ratio alpha_RR/alpha_p = {arr/ap:.5f}  "
               f"(theory sqrt(2/5) = {RATIO_RR:.5f})")

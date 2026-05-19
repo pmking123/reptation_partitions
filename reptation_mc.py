@@ -355,11 +355,16 @@ def run_length_distribution(L, n_steps=500000, seed=42):
 
 def scaling_study(L_vals, n_per_L=None, seed=42):
     PI       = math.pi
-    pred_k   = PI/math.sqrt(6)
-    pred_sig = math.sqrt(pred_k)
-
-    print("Scaling study")
-    print(f"  Predictions: k/sqrtL -> {pred_k:.4f},  sigma/L^.25 -> {pred_sig:.4f}")
+    print("Scaling study (weighted measure w_tilde = k! * 2^k / prod m_j!)")
+    print("  NOTE: under this weighted measure E[k] ~ c * sqrt(L) * log(L),")
+    print("  not sqrt(L). The ratio <k>/sqrt(L) grows as log(L) and does")
+    print("  not converge. This is consistent with the canonical/GC")
+    print("  inequivalence established in the paper (Section 6.3).")
+    print("  The GC prediction pi/sqrt(6) applies only under the")
+    print("  Boltzmann-weighted grand canonical ensemble, not here.")
+    print()
+    pred_k   = math.sqrt(6) / PI   # Erdos-Lehner coefficient for sqrt(L)*log(L)
+    print(f"  Expected scaling: <k>/sqrt(L) ~ {pred_k:.4f} * log(L)  (growing)")
     print()
     hdr = (f"{'L':>6}  {'<k>/sqL':>9}  {'err%':>6}  "
            f"{'sig/L^.25':>10}  {'err%':>6}  "
@@ -391,10 +396,9 @@ def scaling_study(L_vals, n_per_L=None, seed=42):
         ti   = tau_int(autocorrelation(k_list))
         ar   = acc/(n*thin)
 
-        ek = (km/sqL-pred_k)/pred_k*100
-        es = (ksig/L14-pred_sig)/pred_sig*100
-        print(f"{L:>6}  {km/sqL:>9.4f}  {ek:>+6.1f}%  "
-              f"{ksig/L14:>10.4f}  {es:>+6.1f}%  "
+        ratio_logL = km / (sqL * math.log(L)) if L > 1 else 0
+        print(f"{L:>6}  {km/sqL:>9.4f}  {ratio_logL:>14.5f}  "
+              f"{ksig/L14:>10.4f}  "
               f"{ti:>7.1f}  {ar:>6.3f}  {t1-t0:>5.1f}")
         results.append({'L':L,'km':km,'ksig':ksig,'tau':ti})
     return results

@@ -5,7 +5,8 @@ Numerical verification of the bounded-segment crossover (Prediction 3).
 
 For the M4 model with at most N_e tube segments each of length >= s,
 the conformational entropy crosses over from exponential to polynomial
-growth at L* ~ (6/pi^2) * N_e^2 ~ 0.608 * N_e^2.
+growth with onset at L*_canon, where L*_GC = (6/pi^2)*N_e^2 ~ 0.608*N_e^2
+is the grand canonical estimate; the peak suppression occurs at ~3-5*L*_canon.
 
 This script computes:
   1. The exact number of M4 partition classes P_L^(N_e) for varying L
@@ -20,7 +21,7 @@ Physical interpretation:
   For L << L*: the constraint k <= N_e is rarely active; the chain
     explores exponentially many tube topologies; entropy ~ alpha_0 * sqrt(L).
   For L >> L*: the constraint binds; all configurations have exactly N_e
-    segments; entropy ~ N_e * log(L/s).
+    segments; entropy ~ (N_e - 1) * log(L/s).
   The crossover at L* ~ 0.608 * N_e^2 is the onset of full tube confinement.
 
 Output
@@ -177,7 +178,7 @@ def analyse_ne(Ne, s, L_max, p_unrestricted):
         sqL       = math.sqrt(L)
         log_P     = math.log(P[L])
         exp_pred  = ALPHA_0 * sqL          # exponential asymptote
-        poly_pred = Ne * math.log(max(L / s, 1.0))  # polynomial asymptote
+        poly_pred = (Ne - 1) * math.log(max(L / s, 1.0))  # polynomial asymptote
         r_exp     = log_P / exp_pred       # -> 1 for L << L*
         r_poly    = log_P / poly_pred      # -> 1 for L >> L*
 
@@ -203,7 +204,7 @@ def analyse_ne(Ne, s, L_max, p_unrestricted):
     L_cross_eq = None
     prev_diff = None
     for L in range(Ne*s, L_max+1):
-        diff = ALPHA_0*math.sqrt(L) - Ne*math.log(max(L/s,1))
+        diff = ALPHA_0*math.sqrt(L) - (Ne - 1)*math.log(max(L/s,1))
         if prev_diff is not None and prev_diff > 0 > diff:
             L_cross_eq = L
             break

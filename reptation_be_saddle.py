@@ -18,13 +18,18 @@ CORRECTION 2: The run-length distribution at the saddle
              where alpha = pi/sqrt(6*L)
 
 CORRECTION 3: The k* scaling
-  Original claim: k* ~ (pi/sqrt(6)) * sqrt(L) ~ 1.2825 * sqrt(L)
-  Status:  (pi/sqrt(6)) * sqrt(L) is the GRAND CANONICAL mean of k
-           (E[k] under the Boltzmann-weighted ensemble at fugacity alpha).
-           Under the CANONICAL (uniform) measure:
-           E[k]_canonical ~ (sqrt(6)/pi) * sqrt(L) * log(L)
-           k*_canonical   ~ 0.95 * (sqrt(6)/pi) * sqrt(L) * log(L)
-           Both grow as sqrt(L)*log(L), NOT sqrt(L).
+NOTE: (pi/sqrt(6)) * sqrt(L) is the GRAND CANONICAL mean of k,
+        i.e. E[k] under the Boltzmann-weighted ensemble at fugacity
+        alpha = pi/sqrt(6L).  It is the correct self-consistency
+        condition for the fugacity and governs the BE run-length
+        distribution, but it is NOT the canonical mode or mean.
+        Under the CANONICAL (uniform) measure (Erdos-Lehner theorem
+        and Fristedt 1993):
+            E[k]_canon ~ (sqrt(6)/pi) * sqrt(L) * log(L)
+            k*_canon   ~ 0.95 * (sqrt(6)/pi) * sqrt(L) * log(L)
+        Both grow as sqrt(L)*log(L), not sqrt(L).  The paper uses
+        k*_canon throughout; the GC formula is retained only as the
+        fugacity condition and for the BE distribution derivation.
 
 Key physical implication:
   The grand canonical prediction k ~ (pi/sqrt(6))*sqrt(L) is correct for
