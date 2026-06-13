@@ -32,7 +32,7 @@ exact edit identified; **NOTE** = matches, minor housekeeping only.
 | 2.2 | KL table, BE vs geom, 12-chain jackknife | `rld_fast.py` (Step 2c) | `rld_out_1.txt` (rld_updated) | see table below | matches to quoted precision | **OK** |
 | 2.3 | k* modal estimate at L=500 | `mc_uniform_fast.py` `run_mode_task` | `mode_500.json` | modal 53; σ_k≈20 | modal_k=53; ksig=19.81 | **OK** |
 | 2.4 | k* / MC sampling extent L≤2000 | `mc_uniform_fast.py` | `mode_2000.json` | "L≤2000" | modal_k=128 (18 h run) | **OK** |
-| 2.5 | BE-convergence monotone in L (burn-in adequacy at L=500) | `rld_fast.py` (Step 3) | `rld_out_1.txt` | "visible for L≥100" | KL_BE 7.7e-4→2.8e-4→1.1e-4→2e-5 (L=100/200/500/2000) | **OK** |
+| 2.5 | BE-convergence monotone in L (burn-in adequacy at L=500) | `rld_fast.py` (Step 3) | `rld_out_1.txt` | "visible for L≥100" | KL_BE 1.0e-3→3e-4→1e-4→2e-5 (L=100/200/500/2000) | **OK** |
 | 2.6 | Weighted-sampler burn-in convergence at L=500 | `burnin_diagnostics.py` | `burnin_convergence_L500.txt` | (scaling-study prerequisite) | running-mean PASS; R̂=1.0067; start spread 0.49% | **OK** |
 
 ### KL table cross-check (claim 2.2)
@@ -47,32 +47,27 @@ exact edit identified; **NOTE** = matches, minor housekeeping only.
 
 | # | Claim (paper location) | Script | Log | Paper value | Recomputed | Status |
 |---|---|---|---|---|---|---|
-| 3.1 | Power-law fit exponent c (L=100–500) | `prediction2.py` + fit | `primary.csv` | c=1.87, R²=0.998 | **2.13, R²=0.999** (paper's 1.87 = full L≤1000 range, contradicts stated exclusion) | **FIX** |
-| 3.2 | √L fit slope a (L=100–500) | `prediction2.py` + fit | `primary.csv` | a=0.191, a/α0=0.074, R²=0.918 | **a=0.273, a/α0=0.107, R²=0.983** | **FIX** |
+| 3.1 | Power-law fit exponent c (L=100–500) | `prediction2.py` + fit | `primary.csv` | c=2.13, R²=0.999 | 2.13, R²=0.999 | **OK** |
+| 3.2 | √L fit slope a (L=100–500) | `prediction2.py` + fit | `primary.csv` | a=0.273, a/α0=0.107, R²=0.983 | a=0.273, a/α0=0.107, R²=0.983 | **OK** |
 | 3.3 | Power law beats √L at accessible L | — | `primary.csv` | "decisively better" | holds (R² 0.999 vs 0.983) | **OK** |
 | 3.4 | L=750,1000 undersampling exclusion | `prediction2.py` | `primary.csv`, logs | T_obs/τ ≳60 (L≤500), <30 (L≥750) | exclusion now consistently applied after refit | **NOTE** verify τ thresholds if τ available |
 | 3.5 | Disorder-sensitivity check (independent obstacle fields) | `prediction2.py` | `seed_check_1.csv`, `seed_check_2.csv` | (separate realisations) | files present | **NOTE** cross-check if cited quantitatively |
 
-## 4. M4 crossover
+## 4. M3 crossover
 
 | # | Claim (paper location) | Script | Log | Paper value | Recomputed | Status |
 |---|---|---|---|---|---|---|
-| 4.1 | M4 crossover L* ~ Ne² | `crossover.py` | `s1_m4_crossover_summary.csv` (+s2,s3) | crossover form | L*_obs/L*_theory rises 7.6→15.2→20.3 (Ne=10,20,30) | **NOTE** confirm paper's claim matches the observed pre-asymptotic ratio trend |
+| 4.1 | M3 crossover L* ~ Ne² | `crossover.py` | `s1_m4_crossover_summary.csv` (+s2,s3) | crossover form | L*_obs/L*_theory rises 7.6→15.2→20.3 (Ne=10,20,30) | **NOTE** confirm paper's claim matches the observed pre-asymptotic ratio trend |
 
 ---
 
 ## Outstanding edits (this round)
 
-**Typos (factual):**
-- Conclusion: "validated ... for $L \le 16$" → "$L \le 20$".
-- Section 8 validation para: "($p(16)=231$ partitions)" → "($p(20)=627$ partitions)".
+**Typos (factual) — verify these are applied in current .tex:**
+- Conclusion: "validated ... for $L \le 20$" — check with `grep "L \\le 16" reptation_partitions.tex`.
+- Section 8 validation para: "($p(20)=627$ partitions)" — check with `grep "p(16)" reptation_partitions.tex`.
 
-**Prediction 2 refit (Section 8, tab:pred2 paragraph):**
-- c: 1.87 → 2.13 (R² 0.998 → 0.999)
-- a: 0.191 → 0.27, a/α0: 0.074 → 0.11 (R² 0.918 → 0.983)
-- Add: "unweighted least squares over L=100–500; excluded L=750,1000 discussed below."
-
-**Decoupling section (separate edit set, 10 edits + lemma):**
+**Decoupling section (separate edit set, 10 edits + lemma) — verify applied:**
 - Definitions of signed realisation + strong self-avoidance; equivalence Lemma;
   restated Theorem + proof; corrected Example (w_strong=4); Remark weak_sa (8→4);
   edge-vs-site Remark; verification subsection recast; table/discussion refs.
@@ -84,3 +79,6 @@ exact edit identified; **NOTE** = matches, minor housekeeping only.
   the canonical mean appears.
 - Appendix A.2 still needs per-run acceptance rate and τ_int columns if not present
   in per-job .out files.
+- `aggregate.py`: `PAPER_KL` constant uses pre-canonical-normaliser KL values;
+  update to (1.0e-3, 8.8e-2), (3e-4, 1.14e-1), (1e-4, 1.66e-1) at L=100,200,500
+  before enabling `--paper` flag.
